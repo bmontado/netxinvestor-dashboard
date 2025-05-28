@@ -18,7 +18,8 @@ if uploaded_file:
 
         header_row_index = None
         for i in range(len(df_preview)):
-            if "Symbol" in df_preview.iloc[i].values:
+            row = df_preview.iloc[i].astype(str).str.strip().str.lower()
+            if row.str.contains("symbol").any():
                 header_row_index = i
                 break
 
