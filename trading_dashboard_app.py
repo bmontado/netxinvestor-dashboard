@@ -23,21 +23,20 @@ if uploaded_file:
     # Mostrar columnas disponibles para debug si falla
     st.write("Columnas detectadas:", df_data.columns.tolist())
 
-    # Renombrar columnas para asegurar consistencia
-    rename_map = {
-        'Gain / Loss': 'Gain/Loss',
-        'Open Date': 'Open Date',
-        'Close Date': 'Close Date'
-    }
-    df_data = df_data.rename(columns=rename_map)
+    # Renombrar columnas manualmente para que encajen con lo que se espera
+    df_data = df_data.rename(columns={
+        df_data.columns[1]: 'Symbol',
+        df_data.columns[4]: 'Gain/Loss',
+        df_data.columns[6]: 'Open Date',
+        df_data.columns[8]: 'Close Date'
+    })
 
-    # Asegurar que existan las columnas claves
     if 'Symbol' in df_data.columns and 'Gain/Loss' in df_data.columns:
         df_data = df_data.dropna(subset=['Symbol', 'Gain/Loss'], how='any')
 
         for col in ['Gain/Loss', 'Proceeds', 'Cost']:
             if col in df_data.columns:
-                df_data[col] = df_data[col].replace({'\$': '', ',': ''}, regex=True).astype(float)
+                df_data[col] = df_data[col].replace({'\\$': '', ',': ''}, regex=True).astype(float)
 
         df_data['Open Date'] = pd.to_datetime(df_data.get('Open Date'), errors='coerce')
         df_data['Close Date'] = pd.to_datetime(df_data.get('Close Date'), errors='coerce')
