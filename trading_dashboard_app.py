@@ -58,7 +58,11 @@ if uploaded_file:
             st.pyplot(fig)
 
             st.subheader("📋 Resumen de Trades")
-            st.dataframe(df_data[['Symbol', 'Gain/Loss', 'Open Date', 'Close Date', 'Duration (days)', 'Term']])
+            cols_to_show = ['Symbol', 'Gain/Loss', 'Open Date', 'Close Date', 'Duration (days)']
+            for col in cols_to_show:
+                if col not in df_data.columns:
+                    df_data[col] = None
+            st.dataframe(df_data[cols_to_show])
 
         elif view_option == "Resumen Detallado":
             st.subheader("🔍 Análisis Detallado del Rendimiento")
